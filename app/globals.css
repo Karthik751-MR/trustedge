@@ -1,26 +1,388 @@
-@import "tailwindcss";
+@reference "tailwindcss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Global Reset & Defaults ──────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --neon-blue: #00f5ff;
+  --neon-cyan: #00ffff;
+  --neon-pink: #ff00ff;
+  --neon-purple: #9333ea;
+  --neon-green: #10b981;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+::selection {
+  background: rgba(147, 51, 234, 0.4);
+  color: #fff;
+}
+
+/* ── Custom Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #9333ea, #ec4899);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #7c3aed, #db2777);
+}
+
+/* ── Focus Visible (Accessibility) ─────────────────────────── */
+*:focus-visible {
+  outline: 2px solid var(--neon-purple);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Utility Layer ─────────────────────────────────────────── */
+@layer utilities {
+
+  /* Blob animation for background */
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 10s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  /* Glassmorphism effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent;
+  }
+
+  /* Shimmer effect */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Pulse dot */
+  @keyframes pulse-dot {
+    0% {
+      box-shadow: 0 0 0 0 rgba(147, 51, 234, 0.7);
+    }
+
+    70% {
+      box-shadow: 0 0 0 10px rgba(147, 51, 234, 0);
+    }
+
+    100% {
+      box-shadow: 0 0 0 0 rgba(147, 51, 234, 0);
+    }
+  }
+
+  .animate-pulse-dot {
+    animation: pulse-dot 2s infinite;
+  }
+
+  /* Success checkmark animation */
+  @keyframes checkmark {
+    0% {
+      stroke-dashoffset: 100;
+    }
+
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .animate-checkmark {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: checkmark 0.8s ease-out forwards;
+  }
+
+  /* Confetti animation */
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-100vh) rotate(0deg);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(45deg, #f06, #f90, #6f0, #09f, #60f);
+    animation: confetti-fall 3s linear forwards;
+  }
+
+  /* Loading scanner effect */
+  @keyframes scan {
+    0% {
+      transform: translateY(0);
+    }
+
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  .scanning-line {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #9333ea, transparent);
+    animation: scan 2s linear infinite;
+  }
+
+  /* Forensic heatmap overlay */
+  .heatmap-overlay {
+    background: radial-gradient(ellipse at var(--x, 50%) var(--y, 50%),
+        rgba(239, 68, 68, 0.6) 0%,
+        rgba(239, 68, 68, 0.3) 40%,
+        transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Glow effect */
+  .glow {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.5),
+      0 0 40px rgba(147, 51, 234, 0.3),
+      0 0 60px rgba(147, 51, 234, 0.1);
+  }
+
+  /* Neon glow effect for navigation links */
+  .neon-glow {
+    text-shadow: 0 0 10px rgba(147, 51, 234, 0.8),
+      0 0 20px rgba(147, 51, 234, 0.6),
+      0 0 30px rgba(147, 51, 234, 0.4);
+    color: #a855f7;
+  }
+
+  /* Verification status colors */
+  .status-valid {
+    @apply bg-gradient-to-r from-green-500 to-emerald-500;
+  }
+
+  .status-suspicious {
+    @apply bg-gradient-to-r from-yellow-500 to-amber-500;
+  }
+
+  .status-fake {
+    @apply bg-gradient-to-r from-red-500 to-rose-500;
+  }
+
+  /* Card hover effect */
+  .card-hover {
+    transition: all 0.3s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Number counter animation */
+  @keyframes count-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-count {
+    animation: count-up 0.5s ease-out;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Extended Neon Theme Classes ────────────────────────────── */
+.neon-text-cyan {
+  text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.neon-text-pink {
+  text-shadow: 0 0 10px var(--neon-pink);
+}
+
+.glow-neon-blue {
+  box-shadow: 0 0 30px var(--neon-blue);
+}
+
+.glow-neon-cyan {
+  box-shadow: 0 0 30px var(--neon-cyan);
+}
+
+.glow-neon-pink {
+  box-shadow: 0 0 30px var(--neon-pink);
+}
+
+.glow-neon-purple {
+  box-shadow: 0 0 30px var(--neon-purple);
+}
+
+.glow-neon-green {
+  box-shadow: 0 0 30px var(--neon-green);
+}
+
+/* Intense glow animation for button hovers */
+.glow-intense:hover {
+  box-shadow:
+    0 0 50px var(--neon-pink),
+    0 0 100px var(--neon-blue),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: visible;
+}
+
+.glow-intense:hover::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: radial-gradient(circle, rgba(255, 0, 255, 0.2) 0%, transparent 70%);
+  animation: burst 0.5s ease-out;
+}
+
+@keyframes burst {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Additional animations for the login/signup pages */
+@keyframes border-rotate {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(0deg);
+  }
+
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(360deg);
+  }
+}
+
+.animate-border-rotate {
+  animation: border-rotate 3s linear infinite;
+  background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
+  height: 2px;
+}
+
+/* Enhanced glass effect */
+.glass-neon {
+  background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 0 20px var(--neon-purple),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+/* Enhanced glow effects */
+.glow-neon {
+  box-shadow: 0 0 30px var(--neon-purple);
+  transition: box-shadow 0.3s;
+}
+
+/* Pulse animation for background orbs */
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: scale(1.1);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Skeleton loading animation */
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-skeleton {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
+  background-size: 200% 100%;
 }
